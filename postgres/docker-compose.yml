@@ -1,0 +1,42 @@
+
+services:
+  # PostgreSQL
+  # This is a relational database used for storing data
+  # It is used for storing historical data and other structured data
+  postgres:
+    image: postgres:latest
+    hostname: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: securepassword123
+      POSTGRES_DB: iiot_data
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data # Persistent storage
+    restart: unless-stopped
+
+  # pgAdmin
+  # This is a web-based database management tool for PostgreSQL
+  # It is used for managing PostgreSQL databases
+  pgadmin:
+    image: dpage/pgadmin4
+    hostname: pgadmin
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: securepassword123
+    ports:
+      - "5080:80" # Access pgAdmin at http://localhost:5080
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin # Persistent storage for pgAdmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json # Predefined server connections
+      - ./pgadmin/pgpass:/var/lib/pgadmin/.pgpass # Predefined password file for pgAdmin
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  pgadmin-data:

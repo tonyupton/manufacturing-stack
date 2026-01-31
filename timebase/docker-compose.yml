@@ -1,0 +1,170 @@
+
+services:
+  # Timebase Historian
+  # This is the main data storage and processing engine
+  historian:
+    image: timebase/historian:latest
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 4096m
+    ports:
+      - "4511:4511"
+      - "4512:4512"
+    restart: unless-stopped
+    volumes:
+      - historian:/historian
+      - ./historian/settings:/historian/settings
+    environment:
+      - Settings=/historian/settings
+      - Data=/historian/data
+      - Logs=/historian/logs
+
+  # Timebase Explorer
+  # This is the web-based UI for Timebase
+  explorer:
+    image: timebase/explorer:latest
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 2048m
+    ports:
+      - "4531:4531"
+      - "4532:4532"
+    restart: unless-stopped
+    volumes:
+      - explorer:/explorer
+      - ./explorer/config:/explorer/config
+    environment:
+      - Settings=/explorer/settings
+      - Config=/explorer/config
+      - Data=/explorer/data
+      - Logs=/explorer/logs
+
+  # Simulator Collector
+  # This is a collector that simulates data sources
+  simulator:
+    image: timebase/collector:latest
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 4096m
+    ports:
+      - "4521:4521"
+      - "4522:4522"
+    restart: unless-stopped
+    volumes:
+     - simulator:/simulator
+     - ./collector/simulator/config:/simulator/config
+    environment:
+      - Active=false
+      - Settings=/simulator/settings
+      - Config=/simulator/config
+      - Data=/simulator/data
+      - Logs=/simulator/logs
+
+  # OPC UA Collector
+  # This is a collector that connects to OPC UA servers
+  opcua:
+    image: timebase/collector:latest
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 2048m
+    ports:
+      - "4523:4521"
+      - "4524:4522"
+    restart: unless-stopped
+    volumes:
+     - opcua:/opcua
+     - ./collector/opcua/config:/opcua/config
+    environment:
+      - Active=false
+      - Settings=/opcua/settings
+      - Config=/opcua/config
+      - Data=/opcua/data
+      - Logs=/opcua/logs
+
+  # MQTT Collector
+  # This is a collector that connects to MQTT brokers
+  mqtt:
+    image: timebase/collector:latest
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 2048m
+    ports:
+      - "4525:4521"
+      - "4526:4522"
+    restart: unless-stopped
+    volumes:
+    - mqtt:/mqtt
+    - ./collector/mqtt/config:/mqtt/config
+    environment:
+      - Active=false
+      - Settings=/mqtt/settings
+      - Config=/mqtt/config
+      - Data=/mqtt/data
+      - Logs=/mqtt/logs
+
+  # Sparkplug B Collector
+  # This is a collector that connects to Sparkplug B brokers
+  sparkplugb:
+    image: timebase/collector:latest
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 2048m
+    ports:
+     - "4527:4521"
+     - "4528:4522"
+    restart: unless-stopped
+    volumes:
+    - sparkplugb:/sparkplugb
+    - ./collector/sparkplugb/config:/sparkplugb/config
+    environment:
+      - Active=false
+      - Settings=/sparkplugb/settings
+      - Config=/sparkplugb/config
+      - Data=/sparkplugb/data
+      - Logs=/sparkplugb/logs
+
+
+  pulse:
+    image: timebase/pulse:latest
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2048m
+    ports:
+      - "4541:4541"
+      - "4542:4542"
+    restart: unless-stopped
+    volumes:
+      - pulse_config:/config
+      - pulse_data:/data
+      - pulse_logs:/logs
+      - pulse_settings:/settings
+      - pulse_certificate:/certificate
+    environment:
+      - Active=false
+
+volumes:
+  historian:
+  explorer:
+  simulator:
+  opcua:
+  mqtt:
+  sparkplugb:
+  pulse_settings:
+  pulse_config:
+  pulse_data:
+  pulse_logs:
+  pulse_certificate:
