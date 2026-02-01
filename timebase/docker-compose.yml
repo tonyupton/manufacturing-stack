@@ -8,15 +8,17 @@ services:
         limits:
           cpus: "1"
           memory: 4096m
-    hostname: timebase-historian
+    hostname: historian
     container_name: timebase-historian
     ports:
       - "4511:4511"
       - "4512:4512"
+    networks:
+      - manufacturing-network
     restart: unless-stopped
     volumes:
       - historian:/historian
-      - ./historian/settings/settings.conf:/historian/settings/settings.conf
+      # - ./historian/settings/settings.conf:/historian/settings/settings.conf
     environment:
       - Settings=/historian/settings
       - Data=/historian/data
@@ -31,7 +33,7 @@ services:
         limits:
           cpus: "1"
           memory: 2048m
-    hostname: timebase-explorer
+    hostname: explorer
     container_name: timebase-explorer
     ports:
       - "4531:4531"
@@ -39,7 +41,7 @@ services:
     restart: unless-stopped
     volumes:
       - explorer:/explorer
-      - ./explorer/config/sources.config:/explorer/config/sources.config
+      # - ./explorer/config/sources.config:/explorer/config/sources.config
     environment:
       - Settings=/explorer/settings
       - Config=/explorer/config
@@ -55,7 +57,7 @@ services:
         limits:
           cpus: "1"
           memory: 4096m
-    hostname: timebase-simulator
+    hostname: simulator
     container_name: timebase-simulator
     ports:
       - "4521:4521"
@@ -63,7 +65,7 @@ services:
     restart: unless-stopped
     volumes:
       - simulator:/simulator
-      - ./collector/simulator/config:/simulator/config
+      # - ./collector/simulator/config:/simulator/config
     environment:
       - Active=false
       - Settings=/simulator/settings
@@ -80,7 +82,7 @@ services:
         limits:
           cpus: "1"
           memory: 2048m
-    hostname: timebase-opcua
+    hostname: opcua
     container_name: timebase-opcua
     ports:
       - "4523:4521"
@@ -88,7 +90,7 @@ services:
     restart: unless-stopped
     volumes:
       - opcua:/opcua
-      - ./collector/opcua/config:/opcua/config
+      # - ./collector/opcua/config:/opcua/config
     environment:
       - Active=false
       - Settings=/opcua/settings
@@ -105,7 +107,7 @@ services:
         limits:
           cpus: "1"
           memory: 2048m
-    hostname: timebase-mqtt
+    hostname: mqtt
     container_name: timebase-mqtt
     ports:
       - "4525:4521"
@@ -113,7 +115,7 @@ services:
     restart: unless-stopped
     volumes:
       - mqtt:/mqtt
-      - ./collector/mqtt/config:/mqtt/config
+      # - ./collector/mqtt/config:/mqtt/config
     environment:
       - Active=false
       - Settings=/mqtt/settings
@@ -130,7 +132,7 @@ services:
         limits:
           cpus: "1"
           memory: 2048m
-    hostname: timebase-sparkplugb
+    hostname: sparkplugb
     container_name: timebase-sparkplugb
     ports:
       - "4527:4521"
@@ -138,7 +140,7 @@ services:
     restart: unless-stopped
     volumes:
       - sparkplugb:/sparkplugb
-      - ./collector/sparkplugb/config:/sparkplugb/config
+      # - ./collector/sparkplugb/config:/sparkplugb/config
     environment:
       - Active=false
       - Settings=/sparkplugb/settings
@@ -153,7 +155,7 @@ services:
         limits:
           cpus: "2"
           memory: 2048m
-    hostname: timebase-pulse
+    hostname: pulse
     container_name: timebase-pulse
     ports:
       - "4541:4541"
@@ -180,3 +182,9 @@ volumes:
   pulse_data:
   pulse_logs:
   pulse_certificate:
+
+
+networks:
+  manufacturing-network:
+    name: manufacturing-network
+    external: true

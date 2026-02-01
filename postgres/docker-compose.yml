@@ -11,9 +11,11 @@ services:
       POSTGRES_PASSWORD: securepassword123
       POSTGRES_DB: postgres
     ports:
-      - "5432:5432"
+      - 5432:5432
+    networks:
+      - manufacturing-network
     volumes:
-      - postgres-data:/var/lib/postgresql/data # Persistent storage
+      - postgres-data:/var/lib/postgresql # Persistent storage
     restart: unless-stopped
 
   # pgAdmin
@@ -27,7 +29,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
       PGADMIN_DEFAULT_PASSWORD: securepassword123
     ports:
-      - "5080:80" # Access pgAdmin at http://localhost:5080
+      - 5080:80 # Access pgAdmin at http://localhost:5080
     depends_on:
       - postgres
     volumes:
@@ -39,3 +41,9 @@ services:
 volumes:
   postgres-data:
   pgadmin-data:
+
+
+networks:
+  manufacturing-network:
+    name: manufacturing-network
+    external: true

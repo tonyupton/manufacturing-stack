@@ -10,6 +10,8 @@ services:
       - 8043:8043
       - 8060:8060
       - 62541:62541
+    networks:
+      - manufacturing-network
     volumes:
       - gateway-data:/usr/local/bin/ignition/data
     environment:
@@ -21,3 +23,9 @@ services:
 
 volumes:
   gateway-data:
+
+
+networks:
+  manufacturing-network:
+    name: manufacturing-network
+    external: true
