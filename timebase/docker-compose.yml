@@ -41,7 +41,7 @@ services:
     restart: unless-stopped
     volumes:
       - explorer:/explorer
-      - ./explorer/config/sources.config:/explorer/config/sources.config
+      # - ./explorer/config/sources.config:/explorer/config/sources.config
     environment:
       - Settings=/explorer/settings
       - Config=/explorer/config
