@@ -38,6 +38,8 @@ services:
     ports:
       - "4531:4531"
       - "4532:4532"
+    networks:
+      - manufacturing-network
     restart: unless-stopped
     volumes:
       - explorer:/explorer
